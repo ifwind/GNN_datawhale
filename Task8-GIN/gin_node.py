@@ -1,5 +1,5 @@
 import torch
-from mol_encoder import AtomEncoder
+from ogb.graphproppred.mol_encoder import AtomEncoder
 from gin_conv import GINConv
 import torch.nn.functional as F
 
