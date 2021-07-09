@@ -59,7 +59,7 @@ def prepartion(args):
     print(args, file=args.output_file, flush=True)
 
 
-def train(model, device, loader, optimizer, criterion_fn):
+def train(model, device, loader, optimizer,scheduler, criterion_fn):
     model.train()
     loss_accum = 0
 
@@ -70,6 +70,7 @@ def train(model, device, loader, optimizer, criterion_fn):
         loss = criterion_fn(pred, batch.y.to(torch.float))
         loss.backward()
         optimizer.step()
+		scheduler.step()
         loss_accum += loss.detach().cpu().item()
 
     return loss_accum / (step + 1)
@@ -185,7 +186,7 @@ def main(args):
     for epoch in range(1, args.epochs + 1):
         print("=====Epoch {}".format(epoch), file=args.output_file, flush=True)
         print('Training...', file=args.output_file, flush=True)
-        train_mae = train(model, device, train_loader, optimizer, criterion_fn)
+        train_mae = train(model, device, train_loader, optimizer,scheduler, criterion_fn)
 
         print('Evaluating...', file=args.output_file, flush=True)
         valid_mae = eval(model, device, valid_loader)['mae']
